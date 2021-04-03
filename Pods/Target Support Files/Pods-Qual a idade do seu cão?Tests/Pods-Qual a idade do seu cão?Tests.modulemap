@@ -1,0 +1,6 @@
+framework module Pods_Qual_a_idade_do_seu_ca_o_Tests {
+  umbrella header "Pods-Qual a idade do seu cão?Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}
