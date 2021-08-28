@@ -20,11 +20,7 @@ var window: UIWindow?
         let navigationController = UINavigationController(rootViewController: controller)
         
         window?.rootViewController = navigationController
-        
-        
-        
-        
-        
+
         return true
     }
 

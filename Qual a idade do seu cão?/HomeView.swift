@@ -7,27 +7,34 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 class HomeView: UIView {
     
+    //MARK: - UI
+    
+    public var scrollView: UIScrollView = {
+        let scrollView = UIScrollView(frame: CGRect.zero)
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.alwaysBounceVertical = true
+        return scrollView
+    }()
+    
     lazy var dogImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "cachorro"))
-        imageView.tintColor = .white
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
 
     lazy var doglabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = #colorLiteral(red: 0.01670318842, green: 0.9751387239, blue: 0.9588883519, alpha: 1)
         label.numberOfLines = 0
         label.textAlignment = .center
         label.text = "Digite a idade de seu cachorro, para \n descobrir a idade em anos humanos."
-        
         return label
     }()
     
-    lazy var oldextField: UITextField = {
+    lazy var oldTextField: UITextField = {
         let text = UITextField()
         text.keyboardType = .numberPad
         text.layer.cornerRadius = 8
@@ -37,7 +44,7 @@ class HomeView: UIView {
         text.textColor = .black
         text.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         text.placeholder = "Digite a idade"
-        
+
         return text
     }()
     
@@ -61,44 +68,45 @@ class HomeView: UIView {
         
         return label
     }()
-
+    
+    lazy var mainStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews:  [doglabel,
+                                                    oldTextField,
+                                                    calculateButton,
+                                                    resultLabel])
+        stack.axis = .vertical
+        stack.spacing = 10
+        scrollView.addSubview(stack)
+        return stack
+    }()
+    
+    //MARK: - init
     override init(frame: CGRect) {
         super.init(frame: frame)
         resultLabel.isHidden = true
         self.addSubview(dogImage)
-        self.addSubview(doglabel)
-        self.addSubview(oldextField)
-        self.addSubview(calculateButton)
-        self.addSubview(resultLabel)
+        self.addSubview(scrollView)
+        
+    //MARK: - constraints
         
         dogImage.snp.makeConstraints{ make in
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(200)
+            make.bottom.equalTo(mainStack.snp.top).offset(-20)
             make.left.equalToSuperview().offset(30)
-            make.right.equalToSuperview().offset(-30)
-
-        }
-
-        doglabel.snp.makeConstraints{ make in
-            make.top.equalTo(dogImage.snp.bottom).offset(20)
-            make.left.equalTo(30)
-            make.right.equalTo(-30)
+            make.right.equalToSuperview().offset(-40)
         }
         
-        oldextField.snp.makeConstraints{ make in
-            make.top.equalTo(doglabel.snp.bottom).offset(20)
-            make.left.equalTo(30)
-            make.right.equalTo(-30)
+        mainStack.snp.makeConstraints{ make in
+            make.top.bottom.equalToSuperview().inset(300)
+            make.left.equalToSuperview().offset(30)
+            make.right.equalToSuperview().offset(10)
         }
-        calculateButton.snp.makeConstraints{ make in
-            make.top.equalTo(oldextField.snp.bottom).offset(20)
-            make.left.equalTo(30)
-            make.right.equalTo(-30)
+        
+        scrollView.snp.makeConstraints { (make) in
+            make.top.bottom.left.right.equalToSuperview()
+            make.width.height.equalToSuperview()
         }
-        resultLabel.snp.makeConstraints{ make in
-            make.top.equalTo(calculateButton.snp.bottom).offset(20)
-            make.left.equalTo(30)
-            make.right.equalTo(-30)
-        }
+
     }
     
     
@@ -114,10 +122,8 @@ class HomeView: UIView {
     
     @objc func showAge (_ sender: Any) {
      
-        let idade = Int(oldextField.text!)! * 7
+        let idade = Int(oldTextField.text!)! * 7
         resultLabel.text = "A idade do seu cachorro é:  " + String(idade)
-        resultLabel.isHidden = false 
-        
+        resultLabel.isHidden = false
     }
 }
-
